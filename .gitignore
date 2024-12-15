@@ -1,21 +1,22 @@
-.gradle
+# Gradle-specific files
+jlox/.gradle/
 **/build/
-!src/**/build/
+!jlox/gradle-wrapper.jar
+!jlox/gradle-wrapper.properties
+jlox/gradle-app.setting
+jlox/.gradletasknamecache
 
-# Ignore Gradle GUI config
-gradle-app.setting
-
-# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
-!gradle-wrapper.jar
-
-# Avoid ignore Gradle wrappper properties
-!gradle-wrapper.properties
-
-# Cache of project
-.gradletasknamecache
-
-# Eclipse Gradle plugin generated files
-# Eclipse Core
+# Eclipse-specific files (if you're using Eclipse)
 .project
-# JDT-specific (Eclipse Java Development Tools)
 .classpath
+
+# IntelliJ IDEA files (optional, if you use IntelliJ)
+.idea/
+*.iml
+
+# Logs and temporary files
+jlox/*.log
+*.tmp
+*.bak
+*.swp
+*.swo
