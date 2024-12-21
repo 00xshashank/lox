@@ -34,6 +34,7 @@ public class ASTPrinter implements Expr.Visitor<String>{
             builder.append(" ");
             builder.append(expr.accept(this));
         }
+        builder.append(") ");
         return builder.toString();
     }
 
