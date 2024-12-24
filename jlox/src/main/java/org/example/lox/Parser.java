@@ -1,5 +1,6 @@
 package org.example.lox;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Parser {
@@ -12,9 +13,49 @@ public class Parser {
         this.tokens = tokens;
     }
 
-    public Expr parse() {
-        try { return expression(); }
-        catch (ParseError error) { return null; }
+    public List<Stmt> parse() {
+        List<Stmt> statements = new ArrayList<>();
+        while (!isAtEnd()) { statements.add(declaration()); }
+        return statements;
+    }
+
+    private Stmt declaration() {
+        try {
+            if (match(TokenType.VAR)) {
+                return varDeclaration();
+            } return statement();
+        } catch (ParseError err) {
+            synchronize();
+            return null;
+        }
+    }
+
+    private Stmt varDeclaration() {
+        Token name = consume(TokenType.IDENTIFIER, "Expect a variable name.");
+
+        Expr initializer = null;
+        if (match(TokenType.EQUAL)) {
+            initializer = expression();
+        }
+        consume(TokenType.SEMICOLON, "Expect ';' after variable declaration.");
+        return new Stmt.Var(name, initializer);
+    }
+
+    private Stmt statement() {
+        if (match(TokenType.PRINT)) { return printStatement(); }
+        return expressionStatement();
+    }
+
+    private Stmt printStatement() {
+        Expr value = expression();
+        consume(TokenType.SEMICOLON, "Expect ';' after value.");
+        return new Stmt.Print(value);
+    }
+
+    private Stmt expressionStatement() {
+        Expr value = expression();
+        consume(TokenType.SEMICOLON, "Expect ';' after value.");
+        return new Stmt.Expression(value);
     }
 
     private Expr expression() {
@@ -84,6 +125,8 @@ public class Parser {
         if (match(TokenType.NUMBER, TokenType.STRING)) {
             return new Expr.Literal(previous().literal);
         }
+
+        if (match(TokenType.IDENTIFIER)) { return new Expr.Variable(previous()); }
 
         if (match(TokenType.LEFT_PAREN)) {
             Expr expr = expression();

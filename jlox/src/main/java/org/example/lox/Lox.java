@@ -60,9 +60,8 @@ class Lox {
         List<Token> tokens = scanner.scanTokens();
 
         Parser parser = new Parser(tokens);
-        Expr expression = parser.parse();
-        System.out.println(new ASTPrinter().print(expression));
-        interpreter.interpret(expression);
+        List<Stmt> statements = parser.parse();
+        interpreter.interpret(statements);
     }
 
     public static void error(int line, String message) {

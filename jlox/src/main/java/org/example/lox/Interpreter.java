@@ -1,13 +1,41 @@
 package org.example.lox;
 
-public class Interpreter implements Expr.Visitor<Object>{
-    public void interpret(Expr expression) {
+import java.util.List;
+
+public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
+    private Environment environment = new Environment();
+
+    public void interpret(List<Stmt> statemnts) {
         try {
-            Object value = evaluate(expression);
-            System.out.println(stringify(value));
+            for (Stmt stmt: statemnts) {
+                execute(stmt);
+            }
         } catch (RuntimeError err) {
             Lox.runtimeError(err);
         }
+    }
+
+    private void execute(Stmt stmt) { stmt.accept(this); }
+
+    @Override
+    public Void visitExpressionStmt(Stmt.Expression stmt) {
+        evaluate(stmt.expression);
+        return null;
+    }
+
+    @Override
+    public Void visitPrintStmt(Stmt.Print stmt) {
+        Object value = evaluate(stmt.expression);
+        System.out.println(stringify(value));
+        return null;
+    }
+
+    @Override
+    public Void visitVarStmt(Stmt.Var stmt) {
+        Object value = null;
+        if (stmt.Initializer != null) { value = evaluate(stmt.Initializer); }
+        environment.define(stmt.name.lexeme, value);
+        return null;
     }
 
     @Override
@@ -69,8 +97,12 @@ public class Interpreter implements Expr.Visitor<Object>{
         };
     }
 
+    @Override
+    public Object visitVariableExpr(Expr.Variable expr) {
+        return environment.get(expr.name);
+    }
+
     private Object evaluate(Expr expr) {
-        System.out.println("Evaluating expr: " + expr);
         return expr.accept(this);
     }
 
