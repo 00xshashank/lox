@@ -18,6 +18,12 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     private void execute(Stmt stmt) { stmt.accept(this); }
 
     @Override
+    public Void visitBlockStmt(Stmt.Block stmt) {
+        executeBlock(stmt.statements, new Environment(environment));
+        return null;
+    }
+
+    @Override
     public Void visitExpressionStmt(Stmt.Expression stmt) {
         evaluate(stmt.expression);
         return null;
@@ -36,6 +42,13 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         if (stmt.Initializer != null) { value = evaluate(stmt.Initializer); }
         environment.define(stmt.name.lexeme, value);
         return null;
+    }
+
+    @Override
+    public Object visitAssignExpr(Expr.Assign expr) {
+        Object value = evaluate(expr.value);
+        environment.assign(expr.name, value);
+        return value;
     }
 
     @Override
@@ -104,6 +117,18 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     private Object evaluate(Expr expr) {
         return expr.accept(this);
+    }
+
+    private void executeBlock(List<Stmt> statements, Environment env) {
+        Environment previous = this.environment;
+        try {
+            this.environment = env;
+            for (Stmt stmt: statements) {
+                execute(stmt);
+            }
+        } finally {
+            this.environment = previous;
+        }
     }
 
     private boolean isTruthy(Object obj) {

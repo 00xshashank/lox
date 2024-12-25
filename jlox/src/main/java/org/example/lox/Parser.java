@@ -43,6 +43,7 @@ public class Parser {
 
     private Stmt statement() {
         if (match(TokenType.PRINT)) { return printStatement(); }
+        if (match(TokenType.LEFT_BRACE)) { return new Stmt.Block(block()); }
         return expressionStatement();
     }
 
@@ -58,8 +59,34 @@ public class Parser {
         return new Stmt.Expression(value);
     }
 
+    private List<Stmt> block() {
+        List<Stmt> statements = new ArrayList<>();
+
+        while(match(TokenType.RIGHT_BRACE) && !isAtEnd()) {
+            statements.add(declaration());
+        }
+        consume (TokenType.RIGHT_BRACE, "Expect '}' after block.");
+        return statements;
+    }
+
     private Expr expression() {
-        return equality();
+        return assignment();
+    }
+
+    private Expr assignment() {
+        Expr expr = equality();
+
+        if (match(TokenType.EQUAL)) {
+            Token equals = previous();
+            Expr value = assignment();
+
+            if (expr instanceof Expr.Variable) {
+                Token name = ((Expr.Variable) expr).name;
+                return new Expr.Assign(name, value);
+            }
+            throw error(equals, "Invalid assignment target.");
+        }
+        return expr;
     }
 
     private Expr equality() {
