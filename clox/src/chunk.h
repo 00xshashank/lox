@@ -17,14 +17,16 @@ typedef enum {
 typedef struct {
     int count;
     int capacity;
-    int* lines;
     uint8_t* code;
-    ValueArray contants;
+    // Change line information storage to be more efficient
+    int* lines;
+    ValueArray constants;
 } Chunk;
 
 void initChunk(Chunk* chunk);
+int addConstant(Chunk* chunk, Value value);
 void writeChunk(Chunk* chunk, uint8_t byte, int line);
-int writeConstant(Chunk* chunk, Value value);
+int getLine(Chunk* chunk, uint8_t byte);
 void freeChunk(Chunk* chunk);
 
 #endif
