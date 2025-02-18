@@ -18,7 +18,7 @@ typedef struct {
     int count;
     int capacity;
     uint8_t* code;
-    // Change line information storage to be more efficient
+    int lineCount, lineCapacity;
     int* lines;
     ValueArray constants;
 } Chunk;
@@ -26,7 +26,7 @@ typedef struct {
 void initChunk(Chunk* chunk);
 int addConstant(Chunk* chunk, Value value);
 void writeChunk(Chunk* chunk, uint8_t byte, int line);
-int getLine(Chunk* chunk, uint8_t byte);
+int getLine(Chunk* chunk, int index);
 void freeChunk(Chunk* chunk);
 
 #endif
