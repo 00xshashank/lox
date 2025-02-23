@@ -18,14 +18,17 @@ class GenerateAST {
                     "Binary   : Expr left, Token operator, Expr right",
                     "Grouping : Expr expression",
                     "Literal  : Object value",
+                    "Logical  : Expr left, Token operator, Expr right",
                     "Unary    : Token operator, Expr right",
                     "Variable : Token name"
             ));
             defineAST(outDir, "Stmt", Arrays.asList(
                     "Block     : List<Stmt> statements",
                     "Expression: Expr expression",
+                    "If        : Expr condition, Stmt thenBranch, Stmt elseBranch",
                     "Print     : Expr expression",
-                    "Var       : Token name, Expr Initializer"
+                    "Var       : Token name, Expr Initializer",
+                    "While     : Expr condition, Stmt body"
             ));
         } catch (IOException e) {
             e.printStackTrace();
