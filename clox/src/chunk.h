@@ -11,14 +11,14 @@ typedef enum {
     OP_SUBTRACT,
     OP_MULTIPLY,
     OP_DIVIDE,
-    OP_RETURN
+    OP_RETURN,
+    OP_CONSTANT_LONG
 } OpCode;
 
 typedef struct {
     int count;
     int capacity;
     uint8_t* code;
-    int lineCount, lineCapacity;
     int* lines;
     ValueArray constants;
 } Chunk;
