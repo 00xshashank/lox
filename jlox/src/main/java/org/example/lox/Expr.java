@@ -8,8 +8,10 @@ abstract class Expr {
 		R visitBinaryExpr (Binary expr);
 		R visitCallExpr (Call expr);
 		R visitGroupingExpr (Grouping expr);
+		R visitGetExpr (Get expr);
 		R visitLiteralExpr (Literal expr);
 		R visitLogicalExpr (Logical expr);
+		R visitSetExpr (Set expr);
 		R visitUnaryExpr (Unary expr);
 		R visitVariableExpr (Variable expr);
 	}
@@ -75,6 +77,21 @@ abstract class Expr {
 		}
 	}
 
+	static class Get extends Expr {
+		Get (Expr object, Token name) { 
+			this.object = object;
+			this.name = name;
+		}
+
+		final Expr object;
+		final Token name;
+
+		@Override
+		<R> R accept (Visitor<R> visitor) {
+			return visitor.visitGetExpr(this);
+		}
+	}
+
 	static class Literal extends Expr {
 		Literal (Object value) { 
 			this.value = value;
@@ -102,6 +119,23 @@ abstract class Expr {
 		@Override
 		<R> R accept (Visitor<R> visitor) {
 			return visitor.visitLogicalExpr(this);
+		}
+	}
+
+	static class Set extends Expr {
+		Set (Expr object, Token name, Token value) { 
+			this.object = object;
+			this.name = name;
+			this.value = value;
+		}
+
+		final Expr object;
+		final Token name;
+		final Token value;
+
+		@Override
+		<R> R accept (Visitor<R> visitor) {
+			return visitor.visitSetExpr(this);
 		}
 	}
 
