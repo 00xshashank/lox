@@ -11,8 +11,7 @@ typedef enum {
     OP_SUBTRACT,
     OP_MULTIPLY,
     OP_DIVIDE,
-    OP_RETURN,
-    OP_CONSTANT_LONG
+    OP_RETURN
 } OpCode;
 
 typedef struct {
@@ -24,9 +23,8 @@ typedef struct {
 } Chunk;
 
 void initChunk(Chunk* chunk);
-int addConstant(Chunk* chunk, Value value);
-void writeChunk(Chunk* chunk, uint8_t byte, int line);
-int getLine(Chunk* chunk, int index);
 void freeChunk(Chunk* chunk);
+void writeChunk(Chunk* chunk, uint8_t byte, int line);
+int addConstant(Chunk* chunk, Value value);
 
 #endif

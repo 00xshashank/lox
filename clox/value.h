@@ -6,20 +6,14 @@
 typedef double Value;
 
 typedef struct {
-    int capacity;
     int count;
+    int capacity;
     Value* values;
 } ValueArray;
 
-typedef enum {
-    VAL_BOOL,
-    VAL_NIL,
-    VAL_NUMBER
-} ValueType;
-
 void initValueArray(ValueArray* array);
 void writeValueArray(ValueArray* array, Value value);
-void printValue(Value value);
 void freeValueArray(ValueArray* array);
+void printValue(Value value);
 
 #endif
