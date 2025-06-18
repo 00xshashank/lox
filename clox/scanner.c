@@ -37,13 +37,13 @@ char advance() {
 
 static bool match(char c) {
     if (isAtEnd()) { return false; }
-    if (scanner.current != c) { return false; }
+    if (*scanner.current != c) { return false; }
     scanner.current++;
     return true;
 }
 
 char peek() {
-    return scanner.current;
+    return *scanner.current;
 }
 
 char peekNext() {
